@@ -3,6 +3,7 @@ from flask import Flask, flash, request, redirect, url_for
 from werkzeug.utils import secure_filename
 import shutil
 import zipfile
+import subprocess
 
 
 UPLOAD_FOLDER = 'upload_dir'
@@ -21,6 +22,8 @@ def killserver():
 
 @app.route("/startServer")
 def startserver():
+    command = "sudo docker-compose build;sudo docker-compose up &"
+    result = subprocess.run(command, shell=True)
     return "startserver"
 
 def DeleteAllFilesInDirection(dirpath):
