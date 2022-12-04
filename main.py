@@ -2,6 +2,8 @@ import os
 from flask import Flask, flash, request, redirect, url_for
 from werkzeug.utils import secure_filename
 import shutil
+import zipfile
+
 
 UPLOAD_FOLDER = 'upload_dir'
 ALLOWED_EXTENSIONS = {'zip', 'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
@@ -37,11 +39,20 @@ def DeleteAllFilesInDirection(dirpath):
             # Delete the directory and its contents
             shutil.rmtree(item_path)
 
+def UnzipTheFile(zip_file):
+    # Replace this with the path to the directory where you want to save the unzipped files
+    output_directory = 'server_build'
+
+    # Open the zip file
+    with zipfile.ZipFile(zip_file, 'r') as z:
+        # Extract the files to the output directory
+        z.extractall(output_directory)
 
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
         DeleteAllFilesInDirection("upload_dir")
+        DeleteAllFilesInDirection("server_build")
         # check if the post request has the file part
         if 'file' not in request.files:
             flash('No file part')
@@ -55,6 +66,7 @@ def upload_file():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            UnzipTheFile(filename)
             return "file accepted"
     return '''
     <!doctype html>
