@@ -22,7 +22,7 @@ def killserver():
 
 @app.route("/startServer")
 def startserver():
-    command = "sudo docker-compose build;sudo docker-compose up &"
+    command = "cd server_build;sudo docker-compose build;sudo docker-compose up &"
     result = subprocess.run(command, shell=True)
     return "startserver"
 
