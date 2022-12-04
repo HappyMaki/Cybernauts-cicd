@@ -18,6 +18,8 @@ def allowed_file(filename):
 
 @app.route("/killServer")
 def killserver():
+    command = "cd server_build;sudo docker-compose down"
+    result = subprocess.run(command, shell=True)
     return "kill server"
 
 @app.route("/startServer")
