@@ -44,7 +44,7 @@ def UnzipTheFile(zip_file):
     output_directory = 'server_build'
 
     # Open the zip file
-    with zipfile.ZipFile("UPLOAD_FOLDER/" + zip_file, 'r') as z:
+    with zipfile.ZipFile(UPLOAD_FOLDER + "/" + zip_file, 'r') as z:
         # Extract the files to the output directory
         z.extractall(output_directory)
 
