@@ -44,14 +44,14 @@ def UnzipTheFile(zip_file):
     output_directory = 'server_build'
 
     # Open the zip file
-    with zipfile.ZipFile(zip_file, 'r') as z:
+    with zipfile.ZipFile("UPLOAD_FOLDER/" + zip_file, 'r') as z:
         # Extract the files to the output directory
         z.extractall(output_directory)
 
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
-        DeleteAllFilesInDirection("upload_dir")
+        DeleteAllFilesInDirection(UPLOAD_FOLDER)
         DeleteAllFilesInDirection("server_build")
         # check if the post request has the file part
         if 'file' not in request.files:
