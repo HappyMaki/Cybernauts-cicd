@@ -1,6 +1,7 @@
 import os
 from flask import Flask, flash, request, redirect, url_for
 from werkzeug.utils import secure_filename
+import shutil
 
 UPLOAD_FOLDER = 'upload_dir'
 ALLOWED_EXTENSIONS = {'zip', 'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
@@ -20,9 +21,27 @@ def killserver():
 def startserver():
     return "startserver"
 
+def DeleteAllFilesInDirection(dirpath):
+    directory = dirpath
+
+    # List the contents of the directory
+    for item in os.listdir(directory):
+        # Construct the full path to the item
+        item_path = os.path.join(directory, item)
+
+        # Check if the item is a file or a directory
+        if os.path.isfile(item_path):
+            # Delete the file
+            os.remove(item_path)
+        elif os.path.isdir(item_path):
+            # Delete the directory and its contents
+            shutil.rmtree(item_path)
+
+
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
+        DeleteAllFilesInDirection("upload_dir")
         # check if the post request has the file part
         if 'file' not in request.files:
             flash('No file part')
