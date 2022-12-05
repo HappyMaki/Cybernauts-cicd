@@ -5,7 +5,7 @@ import shutil
 import zipfile
 import subprocess
 
-
+TOKEN = "asdasd"
 UPLOAD_FOLDER = 'upload_dir'
 ALLOWED_EXTENSIONS = {'zip', 'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
@@ -16,17 +16,23 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@app.route("/killServer")
+@app.route("/kill_server")
 def killserver():
+    token = request.headers.get('token')
+    if token != TOKEN:
+        return "failed token check"
     command = "cd server_build;sudo docker-compose down"
     result = subprocess.run(command, shell=True)
-    return "kill server"
+    return "killed server"
 
-@app.route("/startServer")
+@app.route("/start_server")
 def startserver():
+    token = request.headers.get('token')
+    if token != TOKEN:
+        return "failed token check"
     command = "cd server_build;sudo docker-compose build;sudo docker-compose up &"
     result = subprocess.run(command, shell=True)
-    return "startserver"
+    return "started server"
 
 def DeleteAllFilesInDirection(dirpath):
     directory = dirpath
@@ -53,8 +59,11 @@ def UnzipTheFile(zip_file):
         # Extract the files to the output directory
         z.extractall(output_directory)
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/upload_new_build', methods=['GET', 'POST'])
 def upload_file():
+    token = request.headers.get('token')
+    if token != TOKEN:
+        return "failed token check"
     if request.method == 'POST':
         DeleteAllFilesInDirection(UPLOAD_FOLDER)
         DeleteAllFilesInDirection("server_build")
