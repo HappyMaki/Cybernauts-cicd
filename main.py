@@ -23,7 +23,7 @@ def killserver():
         return "failed token check"
     command = "cd server_build;sudo docker-compose down"
     result = subprocess.run(command, shell=True)
-    return "killed server"
+    return str(result.returncode)
 
 @app.route("/start_server")
 def startserver():
@@ -32,7 +32,7 @@ def startserver():
         return "failed token check"
     command = "cd server_build;sudo docker-compose build;sudo docker-compose up &"
     result = subprocess.run(command, shell=True)
-    return "started server"
+    return str(result.returncode)
 
 def DeleteAllFilesInDirection(dirpath):
     directory = dirpath
